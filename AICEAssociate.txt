@@ -1,4 +1,118 @@
-### AICE Associate ###
+#AICE Associate 자격증
+
+== 개발 workflow ===================
+
+1. 필요한 라이브러리 설치 및 임포트
+2. 데이터 로드
+3. 데이터 분석(구성확인, 상관분석)
+4. 데이터 전처리(결측치 처리, 라벨인코딩 등)
+5. 데이터 분리(x, y)및 데이터 스케일링
+6. 머신러닝/딥러닝
+7. 모델 성능평가(시각화)
+
+================================
+
+이동 통신 고객 이탈 예측 모델 자료데이터
+https://raw.githubusercontent.com/DA4BAM/dataset/master/mobile_NA2.csv
+
+================================
+
+
+1. 필요한 라이브러리 설치 및 임포트
+
+import os
+import warnings
+import matplotlib.pyplot as plt
+warnings.filterwarnings(action='ignore')
+
+#AIDU 내부 연동을 위한 라이브러리 & 변수
+from aicentro.session import Session
+from aicentro.framework.keras import Keras as AiduFrm
+
+aidu_session = Session(verify=False)
+aidu_framework = AiduFrm(session=aidu_session)
+
+!pip install seaborn
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
+
+2. 데이터 로드
+
+df = pd.read_csv('파일경로')
+
+
+
+3. 데이터 분석(구성확인, 상관분석, 시각화)
+
+#데이터 전체 구조 보기
+df
+
+#데이터 정보 확인
+df.info()
+
+#데이터 (행,열) 크기 확인
+df.shape
+
+#데이터 전체 컬럼명 보기
+df.columns
+
+#데이터 상위/하위 5행 출력
+df.head()
+df.tail()
+
+#데이터 통계 보기
+df.describe()
+
+#중앙값(숫자형)
+df['INCOME'].median()
+df.median()
+
+#컬럼 내 각각의 값 분포 -> 제일 위 값이 최빈값
+df['INCOME'].value_counts()
+#전체
+#[df[c].value_counts() for c in df]
+#특정 컬럼 내 각각의 값 분포 비율
+df['REPORTED_SATISFACTION'].value_counts(normalize=True)
+
+#특정 컬럼 내 유일한 값 확인
+df['REPORTED_SATISFACTION'].unique()
+
+#데이터 결측치(null값) 확인
+df.isnull().sum()
+
+#데이터 타입 확인
+df.dtypes
+
+#두 변수간 상관 관계 분석
+df.corr()
+
+# 레이블 선택
+y = df['OVERAGE']
+y
+
+
+
+4. 데이터 전처리(결측치 처리, 라벨인코딩 등)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
