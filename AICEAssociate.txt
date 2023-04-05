@@ -6,9 +6,10 @@
 2. 데이터 로드
 3. 데이터 분석(구성확인, 상관분석)
 4. 데이터 전처리(결측치 처리, 라벨인코딩 등)
-5. 데이터 분리(x, y)및 데이터 스케일링
-6. 머신러닝/딥러닝
-7. 모델 성능평가(시각화)
+5. 데이터 분리(x, y)
+6. 데이터 스케일링(정규화)
+7. 머신러닝/딥러닝
+8. 모델 성능평가(시각화)
 
 ================================
 
@@ -99,18 +100,98 @@ y
 
 4. 데이터 전처리(결측치 처리, 라벨인코딩 등)
 
+#특정 컬럼 삭제 -> axis=0 행 삭제 / axis=1 열 삭제
+df1 = df.drop(['id', 'COLLEGE', 'LEFTOVER'], axis=1)
+
+#값 변경 -> 인자(변경 전 값, 변경 후 값, inplace=True)
+df1['REPORTED_USAGE_LEVEL'].replace('avg', 'middle', inplace=True)
+
+#특정 값이 있는 행만 가져오기
+df1[df1['OVERAGE'] == 10]
+
+#특정 값의 개수 확인
+(df['REPORTED_SATISFACTION'] == 'very_unsat').sum()
+
+#전체 값의 개수 확인
+df1.apply(lambda x: x.isin([0]).sum())
+
+## 결측치 처리 ##
+
+#데이터 결측치(null값) 확인
+df.isnull().sum()
+
+#결측치 중간값으로 채우기
+df['HOUSE'].fillna(df['HOUSE'].mean, inplace=True)
+
+#결측치 삭제하기
+df1 = df1.dropna()
+
+## 이상치 처리 ##
+
+#이상치 데이터 확인
+sns.boxplot(x='CHURN', y='LEFTOVER', data=df)
+
+## 라벨 인코딩 ##
+
+#데이터 복사
+df1_copy = df.copy()
+
+#데이터 타입 변경
+df1['SeniorCitizen'] = df1['SeniorCitizen'].astype(float)
+
+#특정 데이터 타입의 컬럼 선택
+c = df1.select_dtypes(include='object')
+c.dtypes
+
+#문자를 숫자로 변경(라벨 인코딩)
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+df1['REPORTED_USAGE_LEVEL'] = le.fit_transform(df1['REPORTED_USAGE_LEVEL'])
+
+## 원-핫 인코딩 ##
+
+# 문자를 숫자로 변경 (원-핫 인코딩)
+# drop_first=True  첫번째 카테고리(인코딩 데이터) 삭제
+cols = df1.select_dtypes('object').columns.tolist()
+df1 = pd.get_dummies(columns=cols, data=df1, drop_first=True)
+
+
+5. 데이터 분리(x, y)
+
+#Feature(X), Target(Y) 분리
+target = 'CHURN'
+x = df1.drop(target, axis=1)
+y = df1[target]
+
+#학습데이터(train set)와 검증데이터(test set)로 분리
+from sklearn.model_selection import train_test_split
+#test_size는 y클래스 비율?
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=2023)
+
+
+
+6. 데이터 스케일링(정규화)
 
 
 
 
 
+7. 머신러닝/딥러닝
 
 
+8. 모델 성능평가(시각화)
 
-
-
-
-
+#차트 그리기
+import matplotlib.pyplot as plt
+%matplotlib inline
+plt.rc('font', family='맑은고딕')
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Acc')
+plt.legend(['acc', 'val_acc'])
+plt.show()
 
 
 
