@@ -242,33 +242,86 @@ print(classification_report(y_test, y_pred))
 
 8. 딥러닝
 
+import tensorflow as tf
+from tensorflow.keras.backend import clear_session
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Input
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+
+#데이터의 행, 열 개수 찾기
+x_train.shape
+
+#이진 분류 모델 생성
+clear_session()
+model = Sequential([
+    Input(shape=(18,)),	#input shape : 입력데이터의 shape(열의 개수) 반드시 명시
+    Dense(64, activation='relu'),
+    Dropout(0.2),
+    Dense(32, activation='relu'),
+    Dropout(0.2),
+    Dense(16, activation='relu'),
+    Dropout(0.2),
+    Dense(1, activation='sigmoid')
+    #다중 분류
+    #Dense('최종output 레이어 개수', activation='softmax')
+])
+model.summary()
+
+#모델 컴파일 optimizer 설정 -> loss:손실함수, metrics:평가기준
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['acc'])
+#다중분류
+#model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc']) #원핫인코딩된 경우
+#model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['acc']) #원핫인코딩 안된 경우
+#회귀
+#model.compile(optimizer='adam', loss='mse', metrics=['mse','mae'])
+
+#callback 함수 설정
+es = EarlyStopping(monitor='val_loss', patience=4, mode='min', verbose=1)
+mc = ModelCheckpoint('best_model.h5', monitor='val_loss', save_best_only=True, verbose=1)
+
+#학습하기
+hist = model.fit(x_train, y_train,
+                batch_size=32,
+                epochs=100,
+                callbacks=[es, mc],
+                validation_data=(x_test, y_test),
+                verbose=1)
 
 
-
-
-
-
-
-
-
-
-
-
-#Accuracy 그래프 그리기
-import matplotlib.pyplot as plt
-%matplotlib inline
-plt.rc('font', family='맑은고딕')
-plt.plot(history.history['acc'])
-plt.plot(history.history['val_acc'])
+#Accurracy 그래프 그리기
 plt.title('Accuracy')
+plt.plot(hist.history['acc'], label='acc')
+plt.plot(hist.history['val_acc'], label='val_acc')
+plt.legend()
 plt.xlabel('Epochs')
 plt.ylabel('Acc')
-plt.legend(['acc', 'val_acc'])
+plt.show()
+
+#Loss 그래프 그리기
+plt.title('Loss')
+plt.plot(hist.history['loss'], label='loss')
+plt.plot(hist.history['val_loss'], label='val_loss')
+plt.legend()
+plt.xlabel('Epochs')
+plt.ylabel('Acc')
+plt.show()
+
+#두개 다 합친 그래프
+plt.title('Accuracy')
+plt.plot(hist.history['acc'], label='acc')
+plt.plot(hist.history['val_acc'], label='val_acc')
+plt.plot(hist.history['loss'], label='loss')
+plt.plot(hist.history['val_loss'], label='val_loss')
+plt.legend()
+plt.xlabel('Epochs')
+plt.ylabel('Acc')
 plt.show()
 
 
 
-9. 모델 성능평가(시각화)
+9. 모델 성능평가
+
+
 
 
 
