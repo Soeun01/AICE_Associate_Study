@@ -1,6 +1,6 @@
 #AICE Associate 자격증
 
-== 개발 workflow ===================
+== 개발 workflow =====================
 
 1. 필요한 라이브러리 설치 및 임포트
 2. 데이터 로드
@@ -12,12 +12,14 @@
 8. 딥러닝
 9. 모델 성능평가(시각화)
 
-================================
+==================================
+
+== 이용한 샘플 데이터 =====================================
 
 이동 통신 고객 이탈 예측 모델 자료데이터
 https://raw.githubusercontent.com/DA4BAM/dataset/master/mobile_NA2.csv
 
-================================
+=====================================================
 
 
 1. 필요한 라이브러리 설치 및 임포트
@@ -321,14 +323,34 @@ plt.show()
 
 9. 모델 성능평가
 
+y_pred = model.predict(x_test)
 
+#Confusion Matrix
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+print(cm)
 
+#Precision(정밀도)
+from sklearn.metrics import precision_score
+ps = precision_score(y_test, y_pred, pos_label=1)
+print('Precision(정밀도): %.4f' % ps)
 
+#Recall(정밀도)
+from sklearn.metrics import recall_score
+rs = recall_score(y_test, y_pred, pos_label=1)
+print('Recall(재현율): %.4f' % rs)
 
+#F1 Score
+from sklearn.metrics import f1_score
+fs = f1_score(y_test, y_pred, pos_label=1)
+print('F1 Score: %.4f' % fs)
 
+#Accuracy(정확도)
+from sklearn.metrics import accuracy_score
+accs = accuracy_score(y_test, y_pred, pos_label=1)
+print('Accuracy(정확도): %.4f' % accs)
 
-
-
-
-
-
+#Classification Report(평가지표-Precision, Recall, F1 한 번에 출력)
+from sklearn.metrics import classification_report
+cr = classification_report(y_test, y_pred, target_names=['class 0', 'class 1'])
+print(cr)
