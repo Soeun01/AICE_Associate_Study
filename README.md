@@ -1,2 +1,2 @@
 # AICE_Associate_Study
-AICE Associate 자격증을 위한 정리 자료
+AICE Associate 자격증 참고용
